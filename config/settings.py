@@ -25,13 +25,22 @@ SECRET_KEY = 'django-insecure--)u9#z*_c$sg)&v+ah#r0$(@_wv!4-u$-g))&mdze%(+%ph+v(
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = ["10.21.1.98", "localhost", "127.0.0.1", "[::1]"]
+
+CORS_ALLOWED_ORIGINS = [
+    "http://10.21.1.98:5173",
+    "http://localhost:5173",
+    "http://127.0.0.1:5173",
+]
+
+CORS_URLS_REGEX = r"^/api/.*$"
 
 
 # Application definition
 
 INSTALLED_APPS = [
     'daphne',
+    'corsheaders',
     'django.contrib.admin',
     'django.contrib.auth',
     'django.contrib.contenttypes',
@@ -40,11 +49,21 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
     'rest_framework',
     'channels',
-
     'websocket',
 ]
 
+REST_FRAMEWORK = {
+    "DEFAULT_AUTHENTICATION_CLASSES": (
+        "rest_framework_simplejwt.authentication.JWTAuthentication",
+        "rest_framework.authentication.SessionAuthentication",
+    ),
+    "DEFAULT_PERMISSION_CLASSES": (
+        "rest_framework.permissions.IsAuthenticated",
+    ),
+}
+
 MIDDLEWARE = [
+    'corsheaders.middleware.CorsMiddleware',
     'django.middleware.security.SecurityMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
     'django.middleware.common.CommonMiddleware',
